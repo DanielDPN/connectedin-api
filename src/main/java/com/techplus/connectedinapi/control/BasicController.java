@@ -11,9 +11,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-
-@CrossOrigin(origins = "*", maxAge = 3600,
-        allowedHeaders={"x-auth-token", "x-requested-with", "x-xsrf-token", "authorization", "content-type"})
 public class BasicController {
 
     @Autowired

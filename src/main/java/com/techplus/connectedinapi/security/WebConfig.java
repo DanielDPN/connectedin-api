@@ -32,7 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         config.setAllowedMethods(allowedMethods);
         config.addExposedHeader("Authorization");
-        source.registerCorsConfiguration("/*", config);
+        source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
 

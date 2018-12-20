@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TokenAuthenticationService {
 
@@ -18,9 +20,11 @@ public class TokenAuthenticationService {
     static final String HEADER_STRING = "Authorization";
 
     static void addAuthentication(HttpServletResponse response, Authentication auth) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", auth.getAuthorities());
         String JWT = Jwts.builder()
                 .setSubject(auth.getName())
-                .claim("roles", auth.getAuthorities())
+                .setClaims(claims)
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, SECRET)
                 .compact();
