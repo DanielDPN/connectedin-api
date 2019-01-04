@@ -29,6 +29,16 @@ public class User {
     private Set<Role> roles = new HashSet<>();
     private String password;
     private boolean enabled;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_contacts",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "contact_id") })
+    private Set<User> contacts = new HashSet<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_posts",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "post_id") })
+    private Set<Post> posts = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -78,16 +88,20 @@ public class User {
         this.enabled = enabled;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", name='" + name + '\'' +
-                ", roles=" + roles +
-                ", password='" + password + '\'' +
-                ", enabled=" + enabled +
-                '}';
+    public Set<User> getContacts() {
+        return contacts;
+    }
+
+    public void setContacts(Set<User> contacts) {
+        this.contacts = contacts;
+    }
+
+    public Set<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(Set<Post> posts) {
+        this.posts = posts;
     }
 
 }
