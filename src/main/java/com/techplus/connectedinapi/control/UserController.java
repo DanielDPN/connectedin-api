@@ -1,7 +1,7 @@
 package com.techplus.connectedinapi.control;
 
 import com.techplus.connectedinapi.model.User;
-import com.techplus.connectedinapi.service.RoleService;
+import com.techplus.connectedinapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,26 +10,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/users")
 public class UserController extends BasicController {
 
-    private final RoleService roleService;
+    private final UserService userService;
 
     @Autowired
-    public UserController(RoleService roleService) {
-        this.roleService = roleService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/contacts")
     public ResponseEntity<Map<String, Object>> findAllContactsByUser() {
-        Set<User> response;
+        List<User> response;
         final Map<String, Object> result = new HashMap<>();
         try {
-            response = getUserLogado().getContacts();
+            response = userService.contactsByUser(getUserLogado().getId());
 
             result.put("success", true);
             result.put("error", null);

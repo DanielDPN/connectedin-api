@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
@@ -26,6 +29,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public <S extends User> S save(S s) {
         return userRepository.save(s);
+    }
+
+    @Override
+    public List<User> contactsByUser(Long userId) {
+        List<User> response = new ArrayList<>();
+        List<Object[]> _response = userRepository.contactsByUser(userId);
+        for(Object[] obj: _response) {
+            User _user = new User();
+            _user.setId(Long.parseLong(obj[0].toString()));
+            _user.setEmail(obj[1].toString());
+            _user.setEnabled(Boolean.parseBoolean(obj[2].toString()));
+            _user.setName(obj[3].toString());
+            _user.setPassword(obj[4].toString());
+
+            response.add(_user);
+        }
+        return response;
     }
 
 }

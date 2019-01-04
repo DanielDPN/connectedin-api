@@ -24,7 +24,8 @@ public class BasicController {
     public User getUserLogado() throws IOException {
         String jwt = request.getHeader("authorization").substring(7);
         JWTResponse jwtResponse = new ObjectMapper().readValue(new JwtService().decode(jwt), JWTResponse.class);
-        User user = userService.findByEmail(jwtResponse.getSub());
+        User user;
+        user = userService.findByEmail(jwtResponse.getSub());
         return user;
     }
 
