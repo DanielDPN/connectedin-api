@@ -106,4 +106,23 @@ public class UserController extends BasicController {
         }
     }
 
+    @GetMapping("/invitations/received")
+    public ResponseEntity<Map<String, Object>> invitationsReceived() {
+        List<Invitation> response;
+        final Map<String, Object> result = new HashMap<>();
+        try {
+            response = invitationService.findByReceiver_Id(getUserLogado().getId());
+
+            result.put("success", true);
+            result.put("error", null);
+            result.put("body", response);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("error", e.getMessage());
+            result.put("body", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+
 }

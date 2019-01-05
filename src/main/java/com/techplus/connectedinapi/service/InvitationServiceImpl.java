@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 public class InvitationServiceImpl implements InvitationService {
@@ -21,6 +23,11 @@ public class InvitationServiceImpl implements InvitationService {
     @Transactional
     public <S extends Invitation> S save(S s) {
         return invitationRepository.save(s);
+    }
+
+    @Override
+    public List<Invitation> findByReceiver_Id(Long id) {
+        return invitationRepository.findByReceiver_Id(id);
     }
 
 }

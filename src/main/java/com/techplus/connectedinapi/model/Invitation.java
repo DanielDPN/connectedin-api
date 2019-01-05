@@ -5,6 +5,7 @@ import com.techplus.connectedinapi.enums.InvitationStatus;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "invitations")
@@ -44,6 +45,10 @@ public class Invitation {
     }
 
     public User getSender() {
+        sender.setRoles(new HashSet<>());
+        sender.setPassword("");
+        sender.setPosts(new HashSet<>());
+        sender.setContacts(new HashSet<>());
         return sender;
     }
 
@@ -52,6 +57,10 @@ public class Invitation {
     }
 
     public User getReceiver() {
+        receiver.setRoles(new HashSet<>());
+        receiver.setPassword("");
+        receiver.setPosts(new HashSet<>());
+        receiver.setContacts(new HashSet<>());
         return receiver;
     }
 
