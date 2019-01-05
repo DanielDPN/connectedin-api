@@ -35,4 +35,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     )
     void undoFriendship(Long userId, Long contactId);
 
+    @Modifying
+    @Query(
+            value = "update users " +
+                    "set password = :newPassword " +
+                    "where id = :id",
+            nativeQuery = true
+    )
+    void updatePassword(Long id, String newPassword);
+
 }

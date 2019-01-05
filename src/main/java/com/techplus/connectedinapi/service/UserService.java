@@ -15,4 +15,6 @@ public interface UserService {
 
     void undoFriendship(Long userId, Long contactId);
 
+    void updatePassword(Long id, String newPassword);
+
 }

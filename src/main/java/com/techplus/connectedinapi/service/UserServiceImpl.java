@@ -53,4 +53,10 @@ public class UserServiceImpl implements UserService {
     public void undoFriendship(Long userId, Long contactId) {
         userRepository.undoFriendship(userId, contactId);
     }
+
+    @Override
+    @Transactional
+    public void updatePassword(Long id, String newPassword) {
+        userRepository.updatePassword(id, newPassword);
+    }
 }
