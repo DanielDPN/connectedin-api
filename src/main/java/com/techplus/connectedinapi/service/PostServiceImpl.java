@@ -23,6 +23,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public Optional<Post> findById(Long id) {
+        return postRepository.findById(id);
+    }
+
+    @Override
     public List<Post> findByOwner(User owner) {
         return postRepository.findByOwner(owner);
     }
@@ -43,4 +48,11 @@ public class PostServiceImpl implements PostService {
         response.sort(Post::compareTo);
         return response;
     }
+
+    @Override
+    @Transactional
+    public void delete(Post post) {
+        postRepository.delete(post);
+    }
+
 }

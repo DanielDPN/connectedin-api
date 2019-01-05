@@ -21,16 +21,18 @@ public class UserController extends BasicController {
     private final InvitationService invitationService;
     private final RoleService roleService;
     private final UserContactService userContactService;
+    private final UserPostService userPostService;
 
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService, PostService postService, InvitationService invitationService, RoleService roleService, UserContactService userContactService) {
+    public UserController(UserService userService, PostService postService, InvitationService invitationService, RoleService roleService, UserContactService userContactService, UserPostService userPostService) {
         this.userService = userService;
         this.postService = postService;
         this.invitationService = invitationService;
         this.roleService = roleService;
         this.userContactService = userContactService;
+        this.userPostService = userPostService;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -382,6 +384,33 @@ public class UserController extends BasicController {
             result.put("success", true);
             result.put("error", null);
             result.put("body", response);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("error", e.getMessage());
+            result.put("body", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+
+    @DeleteMapping("/posts")
+    public ResponseEntity<Map<String, Object>> deletePost(@RequestParam Long id) {
+        final Map<String, Object> result = new HashMap<>();
+        try {
+            Post post = postService.findById(id).get();
+            if(post.getOwner().getId().equals(getUserLogado().getId())){
+                userPostService.userPostRemove(getUserLogado().getId(), id);
+                postService.delete(post);
+            } else {
+                result.put("success", false);
+                result.put("error", "Postagem não pertence ao usuário");
+                result.put("body", null);
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
+            }
+
+            result.put("success", true);
+            result.put("error", null);
+            result.put("body", "Postagem removida");
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (Exception e) {
             result.put("success", false);
