@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -28,6 +29,11 @@ public class InvitationServiceImpl implements InvitationService {
     @Override
     public List<Invitation> findByReceiver_Id(Long id) {
         return invitationRepository.findByReceiver_Id(id);
+    }
+
+    @Override
+    public Optional<Invitation> findById(Long id) {
+        return invitationRepository.findById(id);
     }
 
 }
