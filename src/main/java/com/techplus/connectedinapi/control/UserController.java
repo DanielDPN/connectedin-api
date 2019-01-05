@@ -2,10 +2,7 @@ package com.techplus.connectedinapi.control;
 
 import com.techplus.connectedinapi.enums.InvitationStatus;
 import com.techplus.connectedinapi.model.*;
-import com.techplus.connectedinapi.service.InvitationService;
-import com.techplus.connectedinapi.service.PostService;
-import com.techplus.connectedinapi.service.RoleService;
-import com.techplus.connectedinapi.service.UserService;
+import com.techplus.connectedinapi.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,15 +20,17 @@ public class UserController extends BasicController {
     private final PostService postService;
     private final InvitationService invitationService;
     private final RoleService roleService;
+    private final UserContactService userContactService;
 
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService, PostService postService, InvitationService invitationService, RoleService roleService) {
+    public UserController(UserService userService, PostService postService, InvitationService invitationService, RoleService roleService, UserContactService userContactService) {
         this.userService = userService;
         this.postService = postService;
         this.invitationService = invitationService;
         this.roleService = roleService;
+        this.userContactService = userContactService;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -278,5 +277,22 @@ public class UserController extends BasicController {
         }
     }
 
+    @PutMapping("/contacts/block")
+    public ResponseEntity<Map<String, Object>> blockFriendship(@RequestParam Long id) {
+        final Map<String, Object> result = new HashMap<>();
+        try {
+            userContactService.blockFriendship(id, getUserLogado().getId());
+
+            result.put("success", true);
+            result.put("error", null);
+            result.put("body", "Contato bloqueado");
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("error", e.getMessage());
+            result.put("body", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
 
 }
