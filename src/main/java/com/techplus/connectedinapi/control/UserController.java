@@ -56,6 +56,16 @@ public class UserController extends BasicController {
             response = userService.findByEmail(email);
             response.setRoles(new HashSet<>());
             response.setPassword("");
+            response.setContacts(new HashSet<>());
+            response.setPosts(new HashSet<>());
+
+            Set<User> contactsByUser = userService.contactsByUser(getUserLogado().getId());
+            if(contactsByUser.contains(response)) {
+                response.setMyFriend(true);
+            } else {
+                response.setMyFriend(false);
+            }
+
             response.setContacts(userService.contactsByUser(response.getId()));
             response.setPosts(postService.findByOwner(response));
 

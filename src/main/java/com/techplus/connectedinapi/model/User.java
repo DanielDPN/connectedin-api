@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -24,21 +25,23 @@ public class User {
     @NotEmpty
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "role_id") })
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles = new HashSet<>();
     private String password;
     private boolean enabled;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_contacts",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "contact_id") })
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "contact_id")})
     private Set<User> contacts = new HashSet<>();
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_posts",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "post_id") })
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "post_id")})
     private Set<Post> posts = new HashSet<>();
+    @Transient
+    private boolean myFriend = false;
 
     public Long getId() {
         return id;
@@ -102,6 +105,35 @@ public class User {
 
     public void setPosts(Set<Post> posts) {
         this.posts = posts;
+    }
+
+    public boolean isMyFriend() {
+        return myFriend;
+    }
+
+    public void setMyFriend(boolean myFriend) {
+        this.myFriend = myFriend;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return enabled == user.enabled &&
+                myFriend == user.myFriend &&
+                Objects.equals(id, user.id) &&
+                email.equals(user.email) &&
+                name.equals(user.name) &&
+                roles.equals(user.roles) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(contacts, user.contacts) &&
+                Objects.equals(posts, user.posts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, name, roles, password, enabled, contacts, posts, myFriend);
     }
 
 }
