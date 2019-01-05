@@ -39,6 +39,11 @@ public class AuthController {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
+    /**
+     * Método para registrar novo usuário
+     * @param u
+     * @return
+     */
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@Valid @RequestBody RegisterCredentials u) {
         User user = userService.findByEmail(u.getEmail());

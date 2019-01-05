@@ -28,6 +28,10 @@ public class UserController extends BasicController {
         this.invitationService = invitationService;
     }
 
+    /**
+     * Método para listar todos os contatos do usuário logado
+     * @return response
+     */
     @GetMapping("/contacts")
     public ResponseEntity<Map<String, Object>> findAllContactsByUser() {
         Set<User> response;
@@ -47,6 +51,11 @@ public class UserController extends BasicController {
         }
     }
 
+    /**
+     * Método para detalhar um usuário
+     * @param email
+     * @return response
+     */
     @GetMapping("/detail")
     public ResponseEntity<Map<String, Object>> detailContact(@RequestParam String email) {
         User response;
@@ -80,6 +89,11 @@ public class UserController extends BasicController {
         }
     }
 
+    /**
+     * Método para enviar um convite para um usuário
+     * @param email
+     * @return response
+     */
     @PostMapping("/invite")
     public ResponseEntity<Map<String, Object>> invite(@RequestParam String email) {
         Invitation response;
@@ -106,6 +120,10 @@ public class UserController extends BasicController {
         }
     }
 
+    /**
+     * Método para listar todos os convites recebidos pelo usuário logado
+     * @return response
+     */
     @GetMapping("/invitations/received")
     public ResponseEntity<Map<String, Object>> invitationsReceived() {
         List<Invitation> response;
@@ -125,6 +143,12 @@ public class UserController extends BasicController {
         }
     }
 
+    /**
+     * Método para aceitar/rejeitar um convite
+     * @param id
+     * @param status
+     * @return response
+     */
     @PutMapping("/invitations/received")
     public ResponseEntity<Map<String, Object>> changeStatusInvitation(@RequestParam Long id,
                                                                       @RequestParam String status) {
