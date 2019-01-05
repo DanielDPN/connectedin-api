@@ -20,4 +20,6 @@ public interface UserService {
 
     void updatePassword(Long id, String newPassword);
 
+    List<User> findByName(String name, Long userLoggedId);
+
 }

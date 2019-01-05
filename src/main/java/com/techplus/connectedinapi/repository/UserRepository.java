@@ -47,4 +47,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     )
     void updatePassword(Long id, String newPassword);
 
+    @Query(
+            value = "select c.id, c.email, c.enabled, c.name, '' as password " +
+                    "from users c " +
+                    "where c.name like :name " +
+                    "and c.id <> :userLoggedId",
+            nativeQuery = true
+    )
+    List<Object[]> findByName(String name, Long userLoggedId);
+
 }

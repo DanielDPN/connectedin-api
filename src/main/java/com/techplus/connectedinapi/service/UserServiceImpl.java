@@ -63,4 +63,23 @@ public class UserServiceImpl implements UserService {
     public void updatePassword(Long id, String newPassword) {
         userRepository.updatePassword(id, newPassword);
     }
+
+    @Override
+    public List<User> findByName(String name, Long userLoggedId) {
+        name = name != null ? "%" + name + "%" : "%%";
+        List<User> response = new ArrayList<>();
+        List<Object[]> _response = userRepository.findByName(name, userLoggedId);
+        for(Object[] obj: _response) {
+            User _user = new User();
+            _user.setId(Long.parseLong(obj[0].toString()));
+            _user.setEmail(obj[1].toString());
+            _user.setEnabled(Boolean.parseBoolean(obj[2].toString()));
+            _user.setName(obj[3].toString());
+            _user.setPassword(obj[4].toString());
+
+            response.add(_user);
+        }
+        return response;
+    }
+
 }

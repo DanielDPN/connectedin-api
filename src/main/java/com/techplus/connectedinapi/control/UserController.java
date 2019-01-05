@@ -277,6 +277,12 @@ public class UserController extends BasicController {
         }
     }
 
+    /**
+     * Método para bloquear amizade
+     *
+     * @param id
+     * @return
+     */
     @PutMapping("/contacts/block")
     public ResponseEntity<Map<String, Object>> blockFriendship(@RequestParam Long id) {
         final Map<String, Object> result = new HashMap<>();
@@ -295,8 +301,14 @@ public class UserController extends BasicController {
         }
     }
 
+    /**
+     * Método para criar postagem
+     *
+     * @param post
+     * @return
+     */
     @PostMapping("/posts/new")
-    public ResponseEntity<Map<String, Object>> blockFriendship(@Valid @RequestBody Post post) {
+    public ResponseEntity<Map<String, Object>> newPost(@Valid @RequestBody Post post) {
         Post response;
         final Map<String, Object> result = new HashMap<>();
         try {
@@ -317,12 +329,55 @@ public class UserController extends BasicController {
         }
     }
 
+    /**
+     * Método para exibir timeline
+     *
+     * @return
+     */
     @GetMapping("/timeline")
     public ResponseEntity<Map<String, Object>> timeline() {
         List<Post> response;
         final Map<String, Object> result = new HashMap<>();
         try {
             response = postService.timeline(getUserLogado());
+
+            result.put("success", true);
+            result.put("error", null);
+            result.put("body", response);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("error", e.getMessage());
+            result.put("body", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+
+    /**
+     * Método para buscar usuários pelo nome
+     *
+     * @param name
+     * @return
+     */
+    @GetMapping("")
+    public ResponseEntity<Map<String, Object>> findByName(@RequestParam String name) {
+        List<User> response;
+        final Map<String, Object> result = new HashMap<>();
+        try {
+            response = userService.findByName(name, getUserLogado().getId());
+
+            List<User> contactsByUser = userService.contactsByUser(getUserLogado().getId());
+            for (User user: response) {
+                user.setRoles(new ArrayList<>());
+                user.setPassword("");
+                user.setContacts(new ArrayList<>());
+                user.setPosts(new ArrayList<>());
+                if (contactsByUser.contains(user)) {
+                    user.setMyFriend(true);
+                } else {
+                    user.setMyFriend(false);
+                }
+            }
 
             result.put("success", true);
             result.put("error", null);
