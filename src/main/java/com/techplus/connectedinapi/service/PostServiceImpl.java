@@ -25,4 +25,10 @@ public class PostServiceImpl implements PostService {
         return postRepository.findByOwner(owner);
     }
 
+    @Override
+    @Transactional
+    public <S extends Post> S save(S s) {
+        return postRepository.save(s);
+    }
+
 }

@@ -9,4 +9,6 @@ public interface PostService {
 
     Set<Post> findByOwner(User owner);
 
+    <S extends Post> S save(S s);
+
 }

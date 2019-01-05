@@ -12,4 +12,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Set<Post> findByOwner(User owner);
 
+    @Override
+    <S extends Post> S save(S s);
+
 }

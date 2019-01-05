@@ -27,6 +27,11 @@ public class Post {
     public Post() {
     }
 
+    public Post(String title, String text) {
+        this.title = title;
+        this.text = text;
+    }
+
     public Post(String title, String text, Date date, User owner) {
         this.title = title;
         this.text = text;
@@ -68,6 +73,7 @@ public class Post {
 
     public User getOwner() {
         owner.setPassword("");
+        owner.setRoles(new HashSet<>());
         owner.setPosts(new HashSet<>());
         owner.setContacts(new HashSet<>());
         return owner;
