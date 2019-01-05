@@ -13,4 +13,6 @@ public interface UserService {
 
     Set<User> contactsByUser(Long userId);
 
+    void undoFriendship(Long userId, Long contactId);
+
 }

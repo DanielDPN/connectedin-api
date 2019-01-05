@@ -2,6 +2,7 @@ package com.techplus.connectedinapi.repository;
 
 import com.techplus.connectedinapi.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -23,5 +24,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
             nativeQuery = true
     )
     Set<Object[]> contactsByUser(Long userId);
+
+    @Modifying
+    @Query(
+            value = "delete uc.* " +
+                    "from users_contacts uc " +
+                    "where uc.user_id = :userId " +
+                    "and uc.contact_id = :contactId",
+            nativeQuery = true
+    )
+    void undoFriendship(Long userId, Long contactId);
 
 }

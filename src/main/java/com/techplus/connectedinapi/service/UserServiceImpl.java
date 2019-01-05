@@ -48,4 +48,9 @@ public class UserServiceImpl implements UserService {
         return response;
     }
 
+    @Override
+    @Transactional
+    public void undoFriendship(Long userId, Long contactId) {
+        userRepository.undoFriendship(userId, contactId);
+    }
 }

@@ -173,4 +173,29 @@ public class UserController extends BasicController {
         }
     }
 
+    /**
+     * Método para desfazer amizade
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/contacts")
+    public ResponseEntity<Map<String, Object>> undoFriendship(@RequestParam Long id) {
+        final Map<String, Object> result = new HashMap<>();
+        try {
+            userService.undoFriendship(getUserLogado().getId(), id);
+            userService.undoFriendship(id, getUserLogado().getId());
+
+            result.put("success", true);
+            result.put("error", null);
+            result.put("body", "Contato removido");
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("error", e.getMessage());
+            result.put("body", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+
 }
