@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,9 +32,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> contactsByUser(Long userId) {
-        List<User> response = new ArrayList<>();
-        List<Object[]> _response = userRepository.contactsByUser(userId);
+    public Set<User> contactsByUser(Long userId) {
+        Set<User> response = new HashSet<>();
+        Set<Object[]> _response = userRepository.contactsByUser(userId);
         for(Object[] obj: _response) {
             User _user = new User();
             _user.setId(Long.parseLong(obj[0].toString()));

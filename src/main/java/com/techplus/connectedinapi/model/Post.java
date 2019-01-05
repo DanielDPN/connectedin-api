@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 
 @Entity
 @Table(name = "posts")
@@ -12,6 +13,8 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
+    private String title;
     @Column(nullable = false)
     private String text;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
@@ -24,7 +27,8 @@ public class Post {
     public Post() {
     }
 
-    public Post(String text, Date date, User owner) {
+    public Post(String title, String text, Date date, User owner) {
+        this.title = title;
         this.text = text;
         this.date = date;
         this.owner = owner;
@@ -36,6 +40,14 @@ public class Post {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getText() {
@@ -55,6 +67,9 @@ public class Post {
     }
 
     public User getOwner() {
+        owner.setPassword("");
+        owner.setPosts(new HashSet<>());
+        owner.setContacts(new HashSet<>());
         return owner;
     }
 

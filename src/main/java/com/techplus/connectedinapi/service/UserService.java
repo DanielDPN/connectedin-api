@@ -3,7 +3,7 @@ package com.techplus.connectedinapi.service;
 
 import com.techplus.connectedinapi.model.User;
 
-import java.util.List;
+import java.util.Set;
 
 public interface UserService {
 
@@ -11,6 +11,6 @@ public interface UserService {
 
     <S extends User> S save(S s);
 
-    List<User> contactsByUser(Long userId);
+    Set<User> contactsByUser(Long userId);
 
 }
