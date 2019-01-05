@@ -5,9 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -27,19 +25,19 @@ public class User {
     @JoinTable(name = "users_roles",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private Set<Role> roles = new HashSet<>();
+    private List<Role> roles = new ArrayList<>();
     private String password;
     private boolean enabled;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_contacts",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "contact_id")})
-    private Set<User> contacts = new HashSet<>();
+    private List<User> contacts = new ArrayList<>();
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_posts",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "post_id")})
-    private Set<Post> posts = new HashSet<>();
+    private List<Post> posts = new ArrayList<>();
     @Transient
     private boolean myFriend = false;
 
@@ -76,11 +74,11 @@ public class User {
         this.name = name;
     }
 
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
@@ -100,19 +98,19 @@ public class User {
         this.enabled = enabled;
     }
 
-    public Set<User> getContacts() {
+    public List<User> getContacts() {
         return contacts;
     }
 
-    public void setContacts(Set<User> contacts) {
+    public void setContacts(List<User> contacts) {
         this.contacts = contacts;
     }
 
-    public Set<Post> getPosts() {
+    public List<Post> getPosts() {
         return posts;
     }
 
-    public void setPosts(Set<Post> posts) {
+    public void setPosts(List<Post> posts) {
         this.posts = posts;
     }
 

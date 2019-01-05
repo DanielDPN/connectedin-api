@@ -5,12 +5,12 @@ import com.techplus.connectedinapi.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Set;
+import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    Set<Post> findByOwner(User owner);
+    List<Post> findByOwner(User owner);
 
     @Override
     <S extends Post> S save(S s);

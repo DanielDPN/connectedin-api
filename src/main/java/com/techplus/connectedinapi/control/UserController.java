@@ -41,7 +41,7 @@ public class UserController extends BasicController {
      */
     @GetMapping("/contacts")
     public ResponseEntity<Map<String, Object>> findAllContactsByUser() {
-        Set<User> response;
+        List<User> response;
         final Map<String, Object> result = new HashMap<>();
         try {
             response = userService.contactsByUser(getUserLogado().getId());
@@ -70,12 +70,12 @@ public class UserController extends BasicController {
         final Map<String, Object> result = new HashMap<>();
         try {
             response = userService.findByEmail(email);
-            response.setRoles(new HashSet<>());
+            response.setRoles(new ArrayList<>());
             response.setPassword("");
-            response.setContacts(new HashSet<>());
-            response.setPosts(new HashSet<>());
+            response.setContacts(new ArrayList<>());
+            response.setPosts(new ArrayList<>());
 
-            Set<User> contactsByUser = userService.contactsByUser(getUserLogado().getId());
+            List<User> contactsByUser = userService.contactsByUser(getUserLogado().getId());
             if (contactsByUser.contains(response)) {
                 response.setMyFriend(true);
             } else {
@@ -262,8 +262,8 @@ public class UserController extends BasicController {
             userService.save(response);
 
             response.setPassword("");
-            response.setContacts(new HashSet<>());
-            response.setPosts(new HashSet<>());
+            response.setContacts(new ArrayList<>());
+            response.setPosts(new ArrayList<>());
 
             result.put("success", true);
             result.put("error", null);
@@ -295,7 +295,7 @@ public class UserController extends BasicController {
         }
     }
 
-    @PostMapping("/post/new")
+    @PostMapping("/posts/new")
     public ResponseEntity<Map<String, Object>> blockFriendship(@Valid @RequestBody Post post) {
         Post response;
         final Map<String, Object> result = new HashMap<>();
@@ -304,6 +304,25 @@ public class UserController extends BasicController {
             post.setOwner(getUserLogado());
 
             response = postService.save(post);
+
+            result.put("success", true);
+            result.put("error", null);
+            result.put("body", response);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("error", e.getMessage());
+            result.put("body", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+
+    @GetMapping("/timeline")
+    public ResponseEntity<Map<String, Object>> timeline() {
+        List<Post> response;
+        final Map<String, Object> result = new HashMap<>();
+        try {
+            response = postService.timeline(getUserLogado());
 
             result.put("success", true);
             result.put("error", null);

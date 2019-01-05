@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.techplus.connectedinapi.enums.InvitationStatus;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 
 @Entity
 @Table(name = "invitations")
@@ -45,10 +45,10 @@ public class Invitation {
     }
 
     public User getSender() {
-        sender.setRoles(new HashSet<>());
+        sender.setRoles(new ArrayList<>());
         sender.setPassword("");
-        sender.setPosts(new HashSet<>());
-        sender.setContacts(new HashSet<>());
+        sender.setPosts(new ArrayList<>());
+        sender.setContacts(new ArrayList<>());
         return sender;
     }
 
@@ -57,10 +57,10 @@ public class Invitation {
     }
 
     public User getReceiver() {
-        receiver.setRoles(new HashSet<>());
+        receiver.setRoles(new ArrayList<>());
         receiver.setPassword("");
-        receiver.setPosts(new HashSet<>());
-        receiver.setContacts(new HashSet<>());
+        receiver.setPosts(new ArrayList<>());
+        receiver.setContacts(new ArrayList<>());
         return receiver;
     }
 

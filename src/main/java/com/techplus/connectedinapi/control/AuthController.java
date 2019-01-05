@@ -18,10 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/auth")
@@ -63,7 +60,7 @@ public class AuthController {
 
                 Role role = roleService.findByRole("ROLE_DEFAULT");
 
-                Set<Role> roles = new HashSet<>();
+                List<Role> roles = new ArrayList<>();
                 roles.add(role);
 
                 user.setRoles(roles);

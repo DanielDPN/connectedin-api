@@ -3,8 +3,8 @@ package com.techplus.connectedinapi.service;
 
 import com.techplus.connectedinapi.model.User;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface UserService {
 
@@ -14,7 +14,7 @@ public interface UserService {
 
     <S extends User> S save(S s);
 
-    Set<User> contactsByUser(Long userId);
+    List<User> contactsByUser(Long userId);
 
     void undoFriendship(Long userId, Long contactId);
 

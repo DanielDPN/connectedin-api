@@ -3,12 +3,12 @@ package com.techplus.connectedinapi.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 
 @Entity
 @Table(name = "posts")
-public class Post {
+public class Post implements Comparable<Post> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,14 +73,19 @@ public class Post {
 
     public User getOwner() {
         owner.setPassword("");
-        owner.setRoles(new HashSet<>());
-        owner.setPosts(new HashSet<>());
-        owner.setContacts(new HashSet<>());
+        owner.setRoles(new ArrayList<>());
+        owner.setPosts(new ArrayList<>());
+        owner.setContacts(new ArrayList<>());
         return owner;
     }
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public int compareTo(Post o) {
+        return o.getDate().compareTo(getDate());
     }
 
 }

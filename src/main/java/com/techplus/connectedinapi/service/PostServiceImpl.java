@@ -7,21 +7,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
+    private final UserService userService;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository) {
+    public PostServiceImpl(PostRepository postRepository, UserService userService) {
         this.postRepository = postRepository;
+        this.userService = userService;
     }
 
     @Override
-    public Set<Post> findByOwner(User owner) {
+    public List<Post> findByOwner(User owner) {
         return postRepository.findByOwner(owner);
     }
 
@@ -31,4 +33,14 @@ public class PostServiceImpl implements PostService {
         return postRepository.save(s);
     }
 
+    @Override
+    public List<Post> timeline(User user) {
+        List<Post> _myPost = postRepository.findByOwner(user);
+        List<Post> response = new ArrayList<>(_myPost);
+        for (User contact: userService.contactsByUser(user.getId())) {
+            response.addAll(postRepository.findByOwner(contact));
+        }
+        response.sort(Post::compareTo);
+        return response;
+    }
 }
