@@ -35,8 +35,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/login/").permitAll()
+                .antMatchers(HttpMethod.POST, "/auth/register/").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/admin/new/").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JWTLoginFilter("/auth/login", authenticationManager()),

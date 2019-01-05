@@ -3,9 +3,12 @@ package com.techplus.connectedinapi.service;
 
 import com.techplus.connectedinapi.model.User;
 
+import java.util.Optional;
 import java.util.Set;
 
 public interface UserService {
+
+    Optional<User> findById(Long id);
 
     User findByEmail(String email);
 
