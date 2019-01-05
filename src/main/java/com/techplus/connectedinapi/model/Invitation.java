@@ -1,6 +1,7 @@
 package com.techplus.connectedinapi.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.techplus.connectedinapi.enums.InvitationStatus;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -21,14 +22,17 @@ public class Invitation {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     @Column(nullable = false)
     private Date date;
+    @Column(nullable = false)
+    private InvitationStatus status;
 
     public Invitation() {
     }
 
-    public Invitation(User sender, User receiver, Date date) {
+    public Invitation(User sender, User receiver, Date date, InvitationStatus status) {
         this.sender = sender;
         this.receiver = receiver;
         this.date = date;
+        this.status = status;
     }
 
     public Long getId() {
@@ -61,6 +65,14 @@ public class Invitation {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public InvitationStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(InvitationStatus status) {
+        this.status = status;
     }
 
 }
