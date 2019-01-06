@@ -1,5 +1,6 @@
 package com.techplus.connectedinapi.service;
 
+import com.techplus.connectedinapi.enums.PostStatus;
 import com.techplus.connectedinapi.model.Post;
 import com.techplus.connectedinapi.model.User;
 import com.techplus.connectedinapi.repository.PostRepository;
@@ -53,6 +54,12 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void delete(Post post) {
         postRepository.delete(post);
+    }
+
+    @Override
+    @Transactional
+    public void updatePostStatus(Long id, Long status) {
+        postRepository.updatePostStatus(id, status);
     }
 
 }

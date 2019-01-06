@@ -403,13 +403,11 @@ public class UserController extends BasicController {
      */
     @DeleteMapping("/posts")
     public ResponseEntity<Map<String, Object>> deletePost(@RequestParam Long id) {
-        Post response;
         final Map<String, Object> result = new HashMap<>();
         try {
             Post post = postService.findById(id).get();
             if(post.getOwner().getId().equals(getUserLogado().getId())){
-                post.setStatus(PostStatus.DELETED);
-                response = postService.save(post);
+                postService.updatePostStatus(id, 1l);
             } else {
                 result.put("success", false);
                 result.put("error", "Postagem não pertence ao usuário");
