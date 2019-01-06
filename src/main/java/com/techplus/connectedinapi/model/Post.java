@@ -1,6 +1,7 @@
 package com.techplus.connectedinapi.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.techplus.connectedinapi.enums.PostStatus;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public class Post implements Comparable<Post> {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
+    @Column(nullable = false)
+    private PostStatus status;
 
     public Post() {
     }
@@ -81,6 +84,14 @@ public class Post implements Comparable<Post> {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    public PostStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PostStatus status) {
+        this.status = status;
     }
 
     @Override

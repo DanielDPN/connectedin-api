@@ -16,10 +16,4 @@ public class UserPostServiceImpl implements UserPostService {
         this.userPostRepository = userPostRepository;
     }
 
-    @Override
-    @Transactional
-    public void userPostRemove(Long userId, Long postId) {
-        userPostRepository.userPostRemove(userId, postId);
-    }
-
 }

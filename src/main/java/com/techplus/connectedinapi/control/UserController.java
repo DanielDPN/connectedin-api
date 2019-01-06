@@ -1,6 +1,7 @@
 package com.techplus.connectedinapi.control;
 
 import com.techplus.connectedinapi.enums.InvitationStatus;
+import com.techplus.connectedinapi.enums.PostStatus;
 import com.techplus.connectedinapi.model.*;
 import com.techplus.connectedinapi.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -316,6 +317,7 @@ public class UserController extends BasicController {
         try {
             post.setDate(new Date());
             post.setOwner(getUserLogado());
+            post.setStatus(PostStatus.CREATED);
 
             response = postService.save(post);
 
@@ -393,14 +395,21 @@ public class UserController extends BasicController {
         }
     }
 
+    /**
+     * Método para deletar postagem
+     *
+     * @param id
+     * @return
+     */
     @DeleteMapping("/posts")
     public ResponseEntity<Map<String, Object>> deletePost(@RequestParam Long id) {
+        Post response;
         final Map<String, Object> result = new HashMap<>();
         try {
             Post post = postService.findById(id).get();
             if(post.getOwner().getId().equals(getUserLogado().getId())){
-                userPostService.userPostRemove(getUserLogado().getId(), id);
-                postService.delete(post);
+                post.setStatus(PostStatus.DELETED);
+                response = postService.save(post);
             } else {
                 result.put("success", false);
                 result.put("error", "Postagem não pertence ao usuário");
