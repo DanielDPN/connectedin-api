@@ -48,6 +48,10 @@ public class UserController extends BasicController {
         final Map<String, Object> result = new HashMap<>();
         try {
             response = userService.contactsByUser(getUserLogado().getId());
+            for (User user: response) {
+                UserContact userContact = userContactService.blocked(user.getId(), getUserLogado().getId());
+                user.setBlocked(userContact.isBlocked());
+            }
 
             result.put("success", true);
             result.put("error", null);
@@ -381,6 +385,8 @@ public class UserController extends BasicController {
                 } else {
                     user.setMyFriend(false);
                 }
+                UserContact userContact = userContactService.blocked(user.getId(), getUserLogado().getId());
+                user.setBlocked(userContact.isBlocked());
             }
 
             result.put("success", true);

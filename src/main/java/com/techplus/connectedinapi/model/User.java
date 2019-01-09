@@ -40,6 +40,8 @@ public class User {
     private List<Post> posts = new ArrayList<>();
     @Transient
     private boolean myFriend = false;
+    @Transient
+    private boolean blocked = false;
 
     public User() {
     }
@@ -122,6 +124,14 @@ public class User {
         this.myFriend = myFriend;
     }
 
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -129,6 +139,7 @@ public class User {
         User user = (User) o;
         return enabled == user.enabled &&
                 myFriend == user.myFriend &&
+                blocked == user.blocked &&
                 Objects.equals(id, user.id) &&
                 email.equals(user.email) &&
                 name.equals(user.name) &&
@@ -140,7 +151,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, name, roles, password, enabled, contacts, posts, myFriend);
+        return Objects.hash(id, email, name, roles, password, enabled, contacts, posts, blocked);
     }
 
 }

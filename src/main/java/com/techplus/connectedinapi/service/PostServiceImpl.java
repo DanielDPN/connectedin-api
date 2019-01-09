@@ -1,14 +1,16 @@
 package com.techplus.connectedinapi.service;
 
-import com.techplus.connectedinapi.enums.PostStatus;
 import com.techplus.connectedinapi.model.Post;
 import com.techplus.connectedinapi.model.User;
+import com.techplus.connectedinapi.model.UserContact;
 import com.techplus.connectedinapi.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -16,11 +18,13 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final UserService userService;
+    private final UserContactService userContactService;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, UserService userService) {
+    public PostServiceImpl(PostRepository postRepository, UserService userService, UserContactService userContactService) {
         this.postRepository = postRepository;
         this.userService = userService;
+        this.userContactService = userContactService;
     }
 
     @Override
@@ -44,7 +48,10 @@ public class PostServiceImpl implements PostService {
         List<Post> _myPost = postRepository.findByOwner(user);
         List<Post> response = new ArrayList<>(_myPost);
         for (User contact: userService.contactsByUser(user.getId())) {
-            response.addAll(postRepository.findByOwner(contact));
+            UserContact userContact = userContactService.blocked(contact.getId(), user.getId());
+            if(!userContact.isBlocked()){
+                response.addAll(postRepository.findByOwner(contact));
+            }
         }
         response.sort(Post::compareTo);
         return response;
