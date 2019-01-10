@@ -1,5 +1,6 @@
 package com.techplus.connectedinapi.repository;
 
+import com.techplus.connectedinapi.enums.PostStatus;
 import com.techplus.connectedinapi.model.Post;
 import com.techplus.connectedinapi.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Optional<Post> findById(Long id);
 
-    List<Post> findByOwner(User owner);
+    List<Post> findByOwnerAndStatus(User owner, PostStatus status);
 
     @Override
     <S extends Post> S save(S s);

@@ -45,17 +45,22 @@ public class UserController extends BasicController {
     @GetMapping("/contacts")
     public ResponseEntity<Map<String, Object>> findAllContactsByUser() {
         List<User> response;
+        List<User> _response = new ArrayList<>();
         final Map<String, Object> result = new HashMap<>();
         try {
             response = userService.contactsByUser(getUserLogado().getId());
             for (User user: response) {
                 UserContact userContact = userContactService.blocked(user.getId(), getUserLogado().getId());
                 user.setBlocked(userContact.isBlocked());
+
+                if(!user.isBlocked()) {
+                    _response.add(user);
+                }
             }
 
             result.put("success", true);
             result.put("error", null);
-            result.put("body", response);
+            result.put("body", _response);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (Exception e) {
             result.put("success", false);
@@ -263,8 +268,10 @@ public class UserController extends BasicController {
             response = userService.findByEmail(userUpdate.getEmail());
 
             Role role = roleService.findByRole("ROLE_ADMIN");
+            List<Role> roles = new ArrayList<>();
+            roles.add(role);
 
-            response.getRoles().add(role);
+            response.setRoles(roles);
 
             userService.save(response);
 
@@ -294,7 +301,7 @@ public class UserController extends BasicController {
     public ResponseEntity<Map<String, Object>> blockFriendship(@RequestParam Long id) {
         final Map<String, Object> result = new HashMap<>();
         try {
-            userContactService.blockFriendship(id, getUserLogado().getId());
+            userContactService.blockFriendship(getUserLogado().getId(), id);
 
             result.put("success", true);
             result.put("error", null);
@@ -370,6 +377,7 @@ public class UserController extends BasicController {
     @GetMapping("")
     public ResponseEntity<Map<String, Object>> findByName(@RequestParam String name) {
         List<User> response;
+        List<User> _response = new ArrayList<>();
         final Map<String, Object> result = new HashMap<>();
         try {
             response = userService.findByName(name, getUserLogado().getId());
@@ -387,11 +395,15 @@ public class UserController extends BasicController {
                 }
                 UserContact userContact = userContactService.blocked(user.getId(), getUserLogado().getId());
                 user.setBlocked(userContact.isBlocked());
+
+                if(!user.isBlocked()) {
+                    _response.add(user);
+                }
             }
 
             result.put("success", true);
             result.put("error", null);
-            result.put("body", response);
+            result.put("body", _response);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (Exception e) {
             result.put("success", false);

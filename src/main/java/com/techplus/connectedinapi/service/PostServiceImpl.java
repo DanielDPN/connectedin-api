@@ -1,5 +1,6 @@
 package com.techplus.connectedinapi.service;
 
+import com.techplus.connectedinapi.enums.PostStatus;
 import com.techplus.connectedinapi.model.Post;
 import com.techplus.connectedinapi.model.User;
 import com.techplus.connectedinapi.model.UserContact;
@@ -34,7 +35,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> findByOwner(User owner) {
-        return postRepository.findByOwner(owner);
+        return postRepository.findByOwnerAndStatus(owner, PostStatus.CREATED);
     }
 
     @Override
@@ -45,12 +46,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> timeline(User user) {
-        List<Post> _myPost = postRepository.findByOwner(user);
+        List<Post> _myPost = postRepository.findByOwnerAndStatus(user, PostStatus.CREATED);
         List<Post> response = new ArrayList<>(_myPost);
         for (User contact: userService.contactsByUser(user.getId())) {
             UserContact userContact = userContactService.blocked(contact.getId(), user.getId());
             if(!userContact.isBlocked()){
-                response.addAll(postRepository.findByOwner(contact));
+                response.addAll(postRepository.findByOwnerAndStatus(contact, PostStatus.CREATED));
             }
         }
         response.sort(Post::compareTo);
