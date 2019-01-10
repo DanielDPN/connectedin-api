@@ -1,5 +1,4 @@
--- Trigger after_update on invitations
-CREATE TRIGGER after_update_invitations
+CREATE TRIGGER accept_invitation
   AFTER UPDATE
   ON invitations FOR EACH ROW
 BEGIN
@@ -8,6 +7,15 @@ BEGIN
     INSERT INTO users_contacts (user_id, contact_id) VALUES (NEW.receiver_id, NEW.sender_id);
   END IF;
 END;
+
+/*CREATE TRIGGER reject_invitation
+  AFTER UPDATE
+  ON invitations FOR EACH ROW
+BEGIN
+  IF NEW.status = 2 THEN
+    delete from invitations where id = OLD.id;
+  END IF;
+END;*/
 
 -- Trigger after_insert on posts
 CREATE TRIGGER after_insert_posts
@@ -18,7 +26,7 @@ BEGIN
 END;
 
 -- Trigger after_update on posts
-CREATE TRIGGER after_update_posts
+/*CREATE TRIGGER after_update_posts
   AFTER UPDATE
   ON posts FOR EACH ROW
 BEGIN
@@ -27,3 +35,4 @@ BEGIN
     DELETE FROM posts WHERE id = OLD.id;
   END IF;
 END;
+*/
