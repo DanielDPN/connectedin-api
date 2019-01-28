@@ -15,6 +15,8 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
 
     List<Invitation> findByReceiver_Id(Long id);
 
+    List<Invitation> findBySender_Id(Long id);
+
     Optional<Invitation> findById(Long id);
 
 }

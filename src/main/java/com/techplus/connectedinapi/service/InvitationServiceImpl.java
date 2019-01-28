@@ -32,6 +32,11 @@ public class InvitationServiceImpl implements InvitationService {
     }
 
     @Override
+    public List<Invitation> findBySender_Id(Long id) {
+        return invitationRepository.findBySender_Id(id);
+    }
+
+    @Override
     public Optional<Invitation> findById(Long id) {
         return invitationRepository.findById(id);
     }
