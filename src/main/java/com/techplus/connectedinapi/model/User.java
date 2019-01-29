@@ -28,6 +28,8 @@ public class User {
     private List<Role> roles = new ArrayList<>();
     private String password;
     private boolean enabled;
+    private boolean active;
+    private String justification;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_contacts",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -100,6 +102,22 @@ public class User {
         this.enabled = enabled;
     }
 
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getJustification() {
+        return justification;
+    }
+
+    public void setJustification(String justification) {
+        this.justification = justification;
+    }
+
     public List<User> getContacts() {
         return contacts;
     }
@@ -138,6 +156,8 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return enabled == user.enabled &&
+                active == user.active &&
+                Objects.equals(justification, user.justification) &&
                 myFriend == user.myFriend &&
                 blocked == user.blocked &&
                 Objects.equals(id, user.id) &&
@@ -151,7 +171,7 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email, name, roles, password, enabled, contacts, posts, blocked);
+        return Objects.hash(id, email, name, roles, password, enabled, active, justification, contacts, posts, blocked);
     }
 
 }

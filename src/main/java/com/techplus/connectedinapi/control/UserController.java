@@ -50,16 +50,16 @@ public class UserController extends BasicController {
         try {
             Role role = roleService.findByRole("ROLE_ADMIN");
 
-            if(getUserLogado().getRoles().contains(role)){
+            if (getUserLogado().getRoles().contains(role)) {
                 response = userService.users();
             } else {
                 response = userService.contactsByUser(getUserLogado().getId());
             }
-            for (User user: response) {
+            for (User user : response) {
                 UserContact userContact = userContactService.blocked(user.getId(), getUserLogado().getId());
                 user.setBlocked(userContact.isBlocked());
 
-                if(!user.isBlocked()) {
+                if (!user.isBlocked()) {
                     _response.add(user);
                 }
             }
@@ -413,7 +413,7 @@ public class UserController extends BasicController {
             response = userService.findByName(name, getUserLogado().getId());
 
             List<User> contactsByUser = userService.contactsByUser(getUserLogado().getId());
-            for (User user: response) {
+            for (User user : response) {
                 user.setRoles(new ArrayList<>());
                 user.setPassword("");
                 user.setContacts(new ArrayList<>());
@@ -426,7 +426,7 @@ public class UserController extends BasicController {
                 UserContact userContact = userContactService.blocked(user.getId(), getUserLogado().getId());
                 user.setBlocked(userContact.isBlocked());
 
-                if(!user.isBlocked()) {
+                if (!user.isBlocked()) {
                     _response.add(user);
                 }
             }
@@ -454,7 +454,7 @@ public class UserController extends BasicController {
         final Map<String, Object> result = new HashMap<>();
         try {
             Post post = postService.findById(id).get();
-            if(post.getOwner().getId().equals(getUserLogado().getId())){
+            if (post.getOwner().getId().equals(getUserLogado().getId())) {
                 postService.updatePostStatus(id, 1l);
             } else {
                 result.put("success", false);
@@ -466,6 +466,58 @@ public class UserController extends BasicController {
             result.put("success", true);
             result.put("error", null);
             result.put("body", "Postagem removida");
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("error", e.getMessage());
+            result.put("body", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+
+    /**
+     * Método para desativar conta de usuário
+     *
+     * @return response
+     */
+    @PutMapping("/disable")
+    public ResponseEntity<Map<String, Object>> disableAccount(@RequestBody String justification) {
+        final Map<String, Object> result = new HashMap<>();
+        try {
+            getUserLogado().setActive(false);
+            getUserLogado().setJustification(justification);
+
+            userService.save(getUserLogado());
+
+            result.put("success", true);
+            result.put("error", null);
+            result.put("body", "Conta desativada");
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("error", e.getMessage());
+            result.put("body", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+
+    /**
+     * Método para ativar conta de usuário
+     *
+     * @return response
+     */
+    @PutMapping("/active")
+    public ResponseEntity<Map<String, Object>> activeAccount() {
+        final Map<String, Object> result = new HashMap<>();
+        try {
+            getUserLogado().setActive(true);
+            getUserLogado().setJustification(null);
+
+            userService.save(getUserLogado());
+
+            result.put("success", true);
+            result.put("error", null);
+            result.put("body", "Conta ativada");
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (Exception e) {
             result.put("success", false);
