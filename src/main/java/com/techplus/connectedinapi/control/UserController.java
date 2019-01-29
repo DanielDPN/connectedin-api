@@ -77,6 +77,27 @@ public class UserController extends BasicController {
     }
 
     /**
+     * Método para verificar se o usuário está ativo
+     *
+     * @return
+     */
+    @GetMapping("/activated")
+    public ResponseEntity<Map<String, Object>> isActivated() {
+        final Map<String, Object> result = new HashMap<>();
+        try {
+            result.put("success", true);
+            result.put("error", null);
+            result.put("body", getUserLogado().isActive());
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("error", e.getMessage());
+            result.put("body", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+
+    /**
      * Método para detalhar um usuário
      *
      * @param email
@@ -94,7 +115,11 @@ public class UserController extends BasicController {
             response.setPosts(new ArrayList<>());
 
             List<User> contactsByUser = userService.contactsByUser(getUserLogado().getId());
-            if (contactsByUser.contains(response)) {
+            List<Long> ids = new ArrayList<>();
+            for (User user : contactsByUser) {
+                ids.add(user.getId());
+            }
+            if(ids.contains(response.getId())){
                 response.setMyFriend(true);
             } else {
                 response.setMyFriend(false);

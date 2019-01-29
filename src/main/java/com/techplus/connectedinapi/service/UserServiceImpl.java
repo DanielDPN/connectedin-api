@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserService {
             _user.setEnabled(Boolean.parseBoolean(obj[2].toString()));
             _user.setName(obj[3].toString());
             _user.setPassword(obj[4].toString());
+            _user.setActive(Boolean.parseBoolean(obj[5].toString()));
 
             response.add(_user);
         }
@@ -63,6 +64,7 @@ public class UserServiceImpl implements UserService {
             _user.setEnabled(Boolean.parseBoolean(obj[2].toString()));
             _user.setName(obj[3].toString());
             _user.setPassword(obj[4].toString());
+            _user.setActive(Boolean.parseBoolean(obj[5].toString()));
 
             response.add(_user);
         }

@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     <S extends User> S save(S s);
 
     @Query(
-            value = "select c.id, c.email, c.enabled, c.name, '' as password " +
+            value = "select c.id, c.email, c.enabled, c.name, '' as password, c.active " +
                     "from users_contacts uc " +
                     "       inner join users c on uc.contact_id = c.id " +
                     "where uc.user_id = :userId",
@@ -29,7 +29,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<Object[]> contactsByUser(Long userId);
 
     @Query(
-            value = "select c.id, c.email, c.enabled, c.name, '' as password " +
+            value = "select c.id, c.email, c.enabled, c.name, '' as password, c.active " +
                     "from users c",
             nativeQuery = true
     )
