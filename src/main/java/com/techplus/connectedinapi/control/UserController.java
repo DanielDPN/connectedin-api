@@ -119,7 +119,7 @@ public class UserController extends BasicController {
             for (User user : contactsByUser) {
                 ids.add(user.getId());
             }
-            if(ids.contains(response.getId())){
+            if (ids.contains(response.getId())) {
                 response.setMyFriend(true);
             } else {
                 response.setMyFriend(false);
@@ -478,9 +478,14 @@ public class UserController extends BasicController {
     public ResponseEntity<Map<String, Object>> deletePost(@RequestParam Long id) {
         final Map<String, Object> result = new HashMap<>();
         try {
+
+            Role role = roleService.findByRole("ROLE_ADMIN");
+
             Post post = postService.findById(id).get();
-            if (post.getOwner().getId().equals(getUserLogado().getId())) {
-                postService.updatePostStatus(id, 1l);
+            if (post.getOwner().getId().equals(getUserLogado().getId())
+                    || getUserLogado().getRoles().contains(role)) {
+                post.setStatus(PostStatus.DELETED);
+                postService.save(post);
             } else {
                 result.put("success", false);
                 result.put("error", "Postagem não pertence ao usuário");
