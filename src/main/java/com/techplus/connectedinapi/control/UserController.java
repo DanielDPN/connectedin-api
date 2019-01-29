@@ -64,9 +64,13 @@ public class UserController extends BasicController {
                 }
             }
 
+            Map<String, Object> map = new HashMap<>();
+            map.put("total_items", response.size());
+            map.put("items", response);
+
             result.put("success", true);
             result.put("error", null);
-            result.put("body", _response);
+            result.put("body", map);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (Exception e) {
             result.put("success", false);
@@ -410,10 +414,13 @@ public class UserController extends BasicController {
         final Map<String, Object> result = new HashMap<>();
         try {
             response = postService.timeline(getUserLogado());
+            Map<String, Object> map = new HashMap<>();
+            map.put("total_items", response.size());
+            map.put("items", response);
 
             result.put("success", true);
             result.put("error", null);
-            result.put("body", response);
+            result.put("body", map);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (Exception e) {
             result.put("success", false);
@@ -456,9 +463,13 @@ public class UserController extends BasicController {
                 }
             }
 
+            Map<String, Object> map = new HashMap<>();
+            map.put("total_items", _response.size());
+            map.put("items", _response);
+
             result.put("success", true);
             result.put("error", null);
-            result.put("body", _response);
+            result.put("body", map);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (Exception e) {
             result.put("success", false);
