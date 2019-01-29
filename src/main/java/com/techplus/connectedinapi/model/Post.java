@@ -26,6 +26,8 @@ public class Post implements Comparable<Post> {
     private User owner;
     @Column(nullable = false)
     private PostStatus status;
+    @Transient
+    private byte[] pic;
 
     public Post() {
     }
@@ -92,6 +94,14 @@ public class Post implements Comparable<Post> {
 
     public void setStatus(PostStatus status) {
         this.status = status;
+    }
+
+    public byte[] getPic() {
+        return pic;
+    }
+
+    public void setPic(byte[] pic) {
+        this.pic = pic;
     }
 
     @Override

@@ -3,12 +3,15 @@ package com.techplus.connectedinapi.control;
 import com.techplus.connectedinapi.enums.InvitationStatus;
 import com.techplus.connectedinapi.enums.PostStatus;
 import com.techplus.connectedinapi.model.*;
+import com.techplus.connectedinapi.repository.FileRepository;
 import com.techplus.connectedinapi.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.*;
@@ -23,17 +26,19 @@ public class UserController extends BasicController {
     private final RoleService roleService;
     private final UserContactService userContactService;
     private final UserPostService userPostService;
+    private final FileRepository fileRepository;
 
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService, PostService postService, InvitationService invitationService, RoleService roleService, UserContactService userContactService, UserPostService userPostService) {
+    public UserController(UserService userService, PostService postService, InvitationService invitationService, RoleService roleService, UserContactService userContactService, UserPostService userPostService, FileRepository fileRepository) {
         this.userService = userService;
         this.postService = postService;
         this.invitationService = invitationService;
         this.roleService = roleService;
         this.userContactService = userContactService;
         this.userPostService = userPostService;
+        this.fileRepository = fileRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -403,6 +408,18 @@ public class UserController extends BasicController {
         }
     }
 
+    @PostMapping("/file/upload/{id}")
+    public String uploadMultipartFile(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        try {
+            FileModel fileModel = new FileModel(file.getOriginalFilename(), file.getContentType(), file.getBytes(), id);
+            fileRepository.save(fileModel);
+            return "File uploaded successfully! -> filename = " + file.getOriginalFilename();
+        } catch (Exception e) {
+            return "FAIL! Maybe You had uploaded the file before or the file's size > 500KB";
+        }
+    }
+
+
     /**
      * Método para exibir timeline
      *
@@ -428,6 +445,20 @@ public class UserController extends BasicController {
             result.put("body", null);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
         }
+    }
+
+    @GetMapping("/pic/post/{id}")
+    public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
+        Optional<FileModel> fileOptional = fileRepository.findByPostId(id);
+
+        if (fileOptional.isPresent()) {
+            FileModel file = fileOptional.get();
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+                    .body(file.getPic());
+        }
+
+        return ResponseEntity.status(404).body(null);
     }
 
     /**
