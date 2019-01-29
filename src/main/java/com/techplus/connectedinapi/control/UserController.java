@@ -48,7 +48,13 @@ public class UserController extends BasicController {
         List<User> _response = new ArrayList<>();
         final Map<String, Object> result = new HashMap<>();
         try {
-            response = userService.contactsByUser(getUserLogado().getId());
+            Role role = roleService.findByRole("ROLE_ADMIN");
+
+            if(getUserLogado().getRoles().contains(role)){
+                response = userService.users();
+            } else {
+                response = userService.contactsByUser(getUserLogado().getId());
+            }
             for (User user: response) {
                 UserContact userContact = userContactService.blocked(user.getId(), getUserLogado().getId());
                 user.setBlocked(userContact.isBlocked());

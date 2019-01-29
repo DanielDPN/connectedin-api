@@ -28,6 +28,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     )
     List<Object[]> contactsByUser(Long userId);
 
+    @Query(
+            value = "select c.id, c.email, c.enabled, c.name, '' as password " +
+                    "from users c",
+            nativeQuery = true
+    )
+    List<Object[]> users();
+
     @Modifying
     @Query(
             value = "delete uc.* " +

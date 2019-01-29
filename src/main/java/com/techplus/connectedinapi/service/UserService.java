@@ -16,6 +16,8 @@ public interface UserService {
 
     List<User> contactsByUser(Long userId);
 
+    List<User> users();
+
     void undoFriendship(Long userId, Long contactId);
 
     void updatePassword(Long id, String newPassword);
