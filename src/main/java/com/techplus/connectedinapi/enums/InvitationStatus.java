@@ -6,7 +6,8 @@ public enum InvitationStatus {
 
     PENDING("pending"),
     ACCEPTED("accepted"),
-    REJECTED("rejected");
+    REJECTED("rejected"),
+    CANCELED("canceled");
 
     private String value;
 
@@ -31,6 +32,8 @@ public enum InvitationStatus {
             status = InvitationStatus.ACCEPTED;
         } else if ("rejected".equals(value)) {
             status = InvitationStatus.REJECTED;
+        } else if ("canceled".equals(value)) {
+            status = InvitationStatus.CANCELED;
         } else {
             status = null;
         }
