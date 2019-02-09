@@ -25,6 +25,12 @@ public class UserContactServiceImpl implements UserContactService {
     }
 
     @Override
+    @Transactional
+    public void unblockFriendship(Long userId, Long contactId) {
+        userContactRepository.unblockFriendship(userId, contactId);
+    }
+
+    @Override
     public UserContact blocked(Long userId, Long contactId) {
         UserContact userContact = new UserContact();
         userContact.setId(new UserContactId(userId, contactId));

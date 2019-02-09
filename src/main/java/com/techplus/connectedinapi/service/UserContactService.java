@@ -6,6 +6,8 @@ public interface UserContactService {
 
     void blockFriendship(Long userId, Long contactId);
 
+    void unblockFriendship(Long userId, Long contactId);
+
     UserContact blocked(Long userId, Long contactId);
 
 }
