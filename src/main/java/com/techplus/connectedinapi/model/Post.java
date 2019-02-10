@@ -6,6 +6,7 @@ import com.techplus.connectedinapi.enums.PostStatus;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -28,6 +29,10 @@ public class Post implements Comparable<Post> {
     private PostStatus status;
     @Transient
     private byte[] pic;
+    @Transient
+    private List<Like> likes;
+    @Transient
+    private boolean liked;
 
     public Post() {
     }
@@ -102,6 +107,22 @@ public class Post implements Comparable<Post> {
 
     public void setPic(byte[] pic) {
         this.pic = pic;
+    }
+
+    public List<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Like> likes) {
+        this.likes = likes;
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
     }
 
     @Override
