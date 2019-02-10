@@ -54,6 +54,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> friendshipSuggestions(Long userId) {
+        List<User> response = new ArrayList<>();
+        List<Object[]> _response = userRepository.friendshipSuggestions(userId);
+        for(Object[] obj: _response) {
+            User _user = new User();
+            _user.setId(Long.parseLong(obj[0].toString()));
+            _user.setEmail(obj[1].toString());
+            _user.setEnabled(Boolean.parseBoolean(obj[2].toString()));
+            _user.setName(obj[3].toString());
+            _user.setPassword(obj[4].toString());
+            _user.setActive(Boolean.parseBoolean(obj[5].toString()));
+
+            response.add(_user);
+        }
+        return response;
+    }
+
+    @Override
     public List<User> users() {
         List<User> response = new ArrayList<>();
         List<Object[]> _response = userRepository.users();

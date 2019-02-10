@@ -29,6 +29,17 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<Object[]> contactsByUser(Long userId);
 
     @Query(
+            value = "select u.id, u.email, u.enabled, u.name, '' as password, u.active " +
+                    "from users u " +
+                    "where u.id not in (select uc.contact_id from users_contacts uc where uc.user_id = :userId) " +
+                    "  and u.id <> :userId " +
+                    "order by rand()" +
+                    "limit 4",
+            nativeQuery = true
+    )
+    List<Object[]> friendshipSuggestions(Long userId);
+
+    @Query(
             value = "select c.id, c.email, c.enabled, c.name, '' as password, c.active " +
                     "from users c",
             nativeQuery = true

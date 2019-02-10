@@ -86,6 +86,34 @@ public class UserController extends BasicController {
     }
 
     /**
+     * Método para retornar sugestões de amizades
+     *
+     * @return
+     */
+    @GetMapping("/friendship/suggestions")
+    public ResponseEntity<Map<String, Object>> friendshipSuggestions() {
+        List<User> response;
+        final Map<String, Object> result = new HashMap<>();
+        try {
+            response = userService.friendshipSuggestions(getUserLogado().getId());
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("total_items", response.size());
+            map.put("items", response);
+
+            result.put("success", true);
+            result.put("error", null);
+            result.put("body", map);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("error", e.getMessage());
+            result.put("body", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+
+    /**
      * Método para verificar se o usuário está ativo
      *
      * @return
