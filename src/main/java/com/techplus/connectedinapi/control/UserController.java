@@ -27,11 +27,12 @@ public class UserController extends BasicController {
     private final UserContactService userContactService;
     private final UserPostService userPostService;
     private final FileRepository fileRepository;
+    private final LikeService likeService;
 
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserController(UserService userService, PostService postService, InvitationService invitationService, RoleService roleService, UserContactService userContactService, UserPostService userPostService, FileRepository fileRepository) {
+    public UserController(UserService userService, PostService postService, InvitationService invitationService, RoleService roleService, UserContactService userContactService, UserPostService userPostService, FileRepository fileRepository, LikeService likeService) {
         this.userService = userService;
         this.postService = postService;
         this.invitationService = invitationService;
@@ -39,6 +40,7 @@ public class UserController extends BasicController {
         this.userContactService = userContactService;
         this.userPostService = userPostService;
         this.fileRepository = fileRepository;
+        this.likeService = likeService;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -665,6 +667,34 @@ public class UserController extends BasicController {
             result.put("success", true);
             result.put("error", null);
             result.put("body", "Conta ativada");
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("error", e.getMessage());
+            result.put("body", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+
+    /**
+     * Método para curtir postagem
+     *
+     * @param postId
+     * @return
+     */
+    @PostMapping("/posts/like")
+    public ResponseEntity<Map<String, Object>> like(@RequestParam Long postId) {
+        Like response;
+        final Map<String, Object> result = new HashMap<>();
+        try {
+            Like like = new Like(postId);
+            like.setUserId(getUserLogado().getId());
+            like.setDate(new Date());
+
+            response = likeService.save(like);
+            result.put("success", true);
+            result.put("error", null);
+            result.put("body", response);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (Exception e) {
             result.put("success", false);
