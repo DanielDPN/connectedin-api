@@ -10,7 +10,7 @@ public interface PostService {
 
     Optional<Post> findById(Long id);
 
-    List<Post> findByOwner(User owner);
+    List<Post> findByOwnerId(User owner);
 
     <S extends Post> S save(S s);
 

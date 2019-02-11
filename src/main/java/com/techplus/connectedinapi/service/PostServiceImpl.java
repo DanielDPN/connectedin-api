@@ -38,9 +38,8 @@ public class PostServiceImpl implements PostService {
         return postRepository.findById(id);
     }
 
-    @Override
-    public List<Post> findByOwner(User owner) {
-        return postRepository.findByOwnerAndStatus(owner, PostStatus.CREATED);
+    public List<Post> findByOwnerId(User owner) {
+        return postRepository.findByOwnerIdAndStatus(owner.getId(), PostStatus.CREATED);
     }
 
     @Override
@@ -51,12 +50,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> timeline(User user) {
-        List<Post> _myPost = postRepository.findByOwnerAndStatus(user, PostStatus.CREATED);
+        List<Post> _myPost = postRepository.findByOwnerIdAndStatus(user.getId(), PostStatus.CREATED);
         List<Post> response = new ArrayList<>(_myPost);
         for (User contact: userService.contactsByUser(user.getId())) {
             UserContact userContact = userContactService.blocked(contact.getId(), user.getId());
             if(!userContact.isBlocked()){
-                response.addAll(postRepository.findByOwnerAndStatus(contact, PostStatus.CREATED));
+                response.addAll(postRepository.findByOwnerIdAndStatus(contact.getId(), PostStatus.CREATED));
             }
         }
         for (Post post: response) {
@@ -66,6 +65,7 @@ public class PostServiceImpl implements PostService {
                     post.setLiked(true);
                 }
             }
+            post.setOwnerName(userService.findById(post.getOwnerId()).get().getName());
         }
         response.sort(Post::compareTo);
         return response;

@@ -142,12 +142,43 @@ public class UserController extends BasicController {
      * @param email
      * @return response
      */
-    @GetMapping("/detail")
-    public ResponseEntity<Map<String, Object>> detailContact(@RequestParam String email) {
+    @GetMapping("/email")
+    public ResponseEntity<Map<String, Object>> findByEmail(@RequestParam String email) {
         User response;
         final Map<String, Object> result = new HashMap<>();
         try {
             response = userService.findByEmail(email);
+            response.setRoles(new ArrayList<>());
+            response.setPassword("");
+            response.setContacts(new ArrayList<>());
+            response.setPosts(new ArrayList<>());
+            response.setContacts(userService.contactsByUser(response.getId()));
+            response.setPosts(postService.findByOwnerId(response));
+
+            result.put("success", true);
+            result.put("error", null);
+            result.put("body", response);
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("error", e.getMessage());
+            result.put("body", null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+        }
+    }
+
+    /**
+     * Método para detalhar um usuário
+     *
+     * @param id
+     * @return response
+     */
+    @GetMapping("/detail")
+    public ResponseEntity<Map<String, Object>> detailContact(@RequestParam Long id) {
+        User response;
+        final Map<String, Object> result = new HashMap<>();
+        try {
+            response = userService.findById(id).get();
             response.setRoles(new ArrayList<>());
             response.setPassword("");
             response.setContacts(new ArrayList<>());
@@ -167,7 +198,7 @@ public class UserController extends BasicController {
             response.setBlocked(userContact.isBlocked());
 
             response.setContacts(userService.contactsByUser(response.getId()));
-            response.setPosts(postService.findByOwner(response));
+            response.setPosts(postService.findByOwnerId(response));
 
             result.put("success", true);
             result.put("error", null);
@@ -468,7 +499,7 @@ public class UserController extends BasicController {
         final Map<String, Object> result = new HashMap<>();
         try {
             post.setDate(new Date());
-            post.setOwner(getUserLogado());
+            post.setOwnerId(getUserLogado().getId());
             post.setStatus(PostStatus.CREATED);
 
             response = postService.save(post);
@@ -601,10 +632,9 @@ public class UserController extends BasicController {
             Role role = roleService.findByRole("ROLE_ADMIN");
 
             Post post = postService.findById(id).get();
-            if (post.getOwner().getId().equals(getUserLogado().getId())
+            if (post.getOwnerId().equals(getUserLogado().getId())
                     || getUserLogado().getRoles().contains(role)) {
-                post.setStatus(PostStatus.DELETED);
-                postService.save(post);
+                postService.delete(post);
             } else {
                 result.put("success", false);
                 result.put("error", "Postagem não pertence ao usuário");

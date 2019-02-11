@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.techplus.connectedinapi.enums.PostStatus;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,9 +21,8 @@ public class Post implements Comparable<Post> {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     @Column(nullable = false)
     private Date date;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
+    @Column(name = "owner_id", nullable = false)
+    private Long ownerId;
     @Column(nullable = false)
     private PostStatus status;
     @Transient
@@ -33,6 +31,8 @@ public class Post implements Comparable<Post> {
     private List<Like> likes;
     @Transient
     private boolean liked;
+    @Transient
+    private String ownerName;
 
     public Post() {
     }
@@ -42,11 +42,11 @@ public class Post implements Comparable<Post> {
         this.text = text;
     }
 
-    public Post(String title, String text, Date date, User owner) {
+    public Post(String title, String text, Date date, Long ownerId) {
         this.title = title;
         this.text = text;
         this.date = date;
-        this.owner = owner;
+        this.ownerId = ownerId;
     }
 
     public Long getId() {
@@ -81,24 +81,20 @@ public class Post implements Comparable<Post> {
         this.date = date;
     }
 
-    public User getOwner() {
-        owner.setPassword("");
-        owner.setRoles(new ArrayList<>());
-        owner.setPosts(new ArrayList<>());
-        owner.setContacts(new ArrayList<>());
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
-
     public PostStatus getStatus() {
         return status;
     }
 
     public void setStatus(PostStatus status) {
         this.status = status;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
     public byte[] getPic() {
@@ -123,6 +119,14 @@ public class Post implements Comparable<Post> {
 
     public void setLiked(boolean liked) {
         this.liked = liked;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
     }
 
     @Override
